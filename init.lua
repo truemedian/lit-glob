@@ -127,8 +127,8 @@ end
 
 --- @function scandir :: dir:string, glob:string -> iterator:function
 --- An iterator which will iterate recursively over `dir` and return the `path` and `kind` of each matching file.
--- This is intended for use in `for path, kind in` statements, but may be used individually.
--- `path` will be relative to `dir.
+-- This is intended for use in `for path, kind in` statements, but may be used individually.  
+-- `path` will be relative to `dir.  
 -- `kind` will be one of `file`, `directory`, or any other possible file type.
 local function scandir(dir, glob)
     local pattern = compile(dir .. '/' .. glob)
