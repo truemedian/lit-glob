@@ -1,6 +1,6 @@
 return {
     name = "truemedian/lit-glob",
-    version = "0.0.1",
+    version = "1.0.0",
     description = "A file globbing library.",
     tags = { "fs", "glob" },
     license = "MIT",
