@@ -1,3 +1,8 @@
+---# lit-glob #---
+-- A file globbing library for Luvit.
+
+--# Functions #--
+
 local fs = require 'fs'
 
 local function split(str)
@@ -66,9 +71,8 @@ local function compile_individual(str)
     return table.concat(parts)
 end
 
----Compiles a glob string into a Lua pattern for use in matching files.
----@param str string
----@return string
+--- @function compile :: str:string -> pattern:string
+--- Compiles a glob string into a Lua pattern for use in matching files.
 local function compile(str)
     local parts = split(str)
 
@@ -92,10 +96,8 @@ local function readdir_aux(path, accum, pattern)
     end
 end
 
----Iterates recursively over `dir` and returns a table of all files matching `glob`.
----@param dir string
----@param glob string
----@return table
+--- @function readdir :: dir:string, glob:string -> files:table
+--- Iterates recursively over `dir` and returns a table of all files matching `glob`.
 local function readdir(dir, glob)
     local pattern = compile(dir .. '/' .. glob)
 
@@ -117,21 +119,17 @@ local function scandir_aux(path, pattern)
     end
 end
 
--- To push path and pattern onto the coroutine's stack
 local function scandir_wrap(path, pattern)
     coroutine.yield()
 
     scandir_aux(path, pattern)
 end
 
----An iterator which will iterate recursively over `dir` and return the `path` and `kind` of each matching file.
----This is intended for use in `for path, kind in` statements, but may be used individually.
----
----`path` will be relative to `dir`.
----`kind` will be one of `file`, `directory`, or any other possible file type.
----@param dir string
----@param glob string
----@return function
+--- @function scandir :: dir:string, glob:string -> iterator:function
+--- An iterator which will iterate recursively over `dir` and return the `path` and `kind` of each matching file.
+-- This is intended for use in `for path, kind in` statements, but may be used individually.
+-- `path` will be relative to `dir.
+-- `kind` will be one of `file`, `directory`, or any other possible file type.
 local function scandir(dir, glob)
     local pattern = compile(dir .. '/' .. glob)
 
@@ -141,20 +139,15 @@ local function scandir(dir, glob)
     return wrapped
 end
 
----Checks if `file` matches `glob`.
----@param file string
----@param glob string
----@return boolean
+--- @function match_baseless :: file:string, glob:string -> matches:boolean
+--- Checks if `file` matches `glob`.
 local function match_baseless(file, glob)
     return exhaustive_find(file, compile(glob))
 end
 
----Checks if `file` matches `glob` after prepending `dir`.
----`file` should be a path starting with `dir`.
----@param dir string
----@param file string
----@param glob string
----@return boolean
+--- @function match :: dir:string, file:string, glob:string -> matches:boolean
+--- Checks if `file` matches `glob` after prepending `dir`.
+-- `file` should be a path starting with `dir`.
 local function match(dir, file, glob)
     return exhaustive_find(file, compile(dir .. '/' .. glob))
 end
